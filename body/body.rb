@@ -15,8 +15,9 @@ class TCPBrainConnection
 
     puts "Waiting for the brain..."
     @brain, brain_addr = @socket.accept
+    brain_port, brain_ip = Socket.unpack_sockaddr_in(brain_addr)
 
-    puts "I has a brain! #{brain_addr.to_s}"
+    puts "I has a brain from #{brain_ip}!"
     
     @brain.puts "hello brain!"
   end
