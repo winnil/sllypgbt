@@ -29,7 +29,11 @@ def pig_console
   
   loop do
     #puts "Body says: '#{@body.recv_status}'"
-    @body.send_cmd gets.chomp
+    command = gets.chomp
+    @body.send_cmd command
+    if command == 'close'
+      exit
+    end
   end
 end
 
