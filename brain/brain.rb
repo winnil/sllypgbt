@@ -29,9 +29,12 @@ def pig_console
   
   loop do
     #puts "Body says: '#{@body.recv_status}'"
-    command = gets.chomp
-    @body.send_cmd command
-    if command == 'close'
+    got_cmd = gets.chomp
+    cmd = convert_cmd(got_cmd)
+    #got_num_parms = gets.chomp
+    command = [1, cmd, 0]
+    @body.send_cmd command.pack("ccv")
+    if got_cmd == 'close'
       exit
     end
   end

@@ -28,15 +28,29 @@ class TCPBrainConnection
 
   def recv_cmd
     @brain.readline.chomp
-  end  
+  end
+    
+  def eval_cmd(cmd_code)
+    table = {
+      P_cmd_close => 'close' 
+    }
+    
+    map = table[cmd_code]
+    if (map)
+      return map
+    else 
+      raise 'go away, i hate you' 
+    end
+  end
 end
 
 b = TCPBrainConnection.new
 
 loop do
-  cmd = b.recv_cmd
-  if cmd == 'close' then
-    b.send_status("byebye :-(")
+  cmd = b.recv_cmd.unpack('ccv')
+
+  if cmd[0] == PMF_cmd and b.eval_cmd(cmd[1]) == 'close' then
+    #b.send_status("byebye :-(")
     exit
   else
     puts "CONFUSED!!!"
