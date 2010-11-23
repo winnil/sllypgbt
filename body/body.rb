@@ -1,7 +1,7 @@
 require 'socket'
+require 'shared/pgbt'
 
-PigPort = 10001
-
+    
 # This lives in the body and sends status to the brain
 class TCPBrainConnection
   include Socket::Constants
@@ -9,7 +9,7 @@ class TCPBrainConnection
   def initialize
     @socket = Socket.new(AF_INET, SOCK_STREAM, 0)
     @socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, true)
-    sockaddr = Socket.pack_sockaddr_in(PigPort, 'localhost')
+    sockaddr = Socket.pack_sockaddr_in(PigPort, $localhost)
     @socket.bind(sockaddr)
     @socket.listen(5)
 
@@ -41,4 +41,5 @@ loop do
     puts "CONFUSED!!!"
   end
 end
+
 
