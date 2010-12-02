@@ -32,7 +32,13 @@ class TCPBrainConnection
     
   def eval_cmd(cmd_code)
     table = {
-      P_cmd_close => 'close' 
+      P_cmd_close => :close,
+      P_cmd_oink  => :oink,
+      P_cmd_walk  => :walk,
+      P_cmd_sleep => :sleep,
+      P_cmd_eat   => :eat,
+      P_cmd_roll  => :roll,
+      P_cmd_grunt => :grunt,
     }
     
     map = table[cmd_code]
@@ -49,11 +55,28 @@ b = TCPBrainConnection.new
 loop do
   cmd = b.recv_cmd.unpack('ccv')
 
-  if cmd[0] == PMF_cmd and b.eval_cmd(cmd[1]) == 'close' then
-    #b.send_status("byebye :-(")
-    exit
-  else
-    puts "CONFUSED!!!"
+  if cmd[0] == PMF_cmd
+    case b.eval_cmd(cmd[1])
+    when :close 
+      exit
+    when :oink
+      system "open rsc/tstPg.jpg"
+    when :walk
+      direction = 'unkown'
+      if (rand(1) == 0)
+        direction = 'forward'
+      else
+        direction = 'backward'
+      end
+      puts "walking for #{rand(50)} steps #{direction}"
+    when :grunt
+      puts "grunt"
+    when :roll
+      puts "rolling to the sound of music!!! lalalalala! oink."
+      system "open rsc/tstSnd.mp3"
+    else
+      puts "CONFUSED!!!"
+    end
   end
 end
 
