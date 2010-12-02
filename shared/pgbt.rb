@@ -22,7 +22,13 @@ P_cmd_grunt   = 7
 
 def convert_cmd(cmd)
   table = {
-    'close' => P_cmd_close
+    'close' => P_cmd_close,
+    'oink'  => P_cmd_oink,
+    'walk'  => P_cmd_walk,
+    'sleep' => P_cmd_sleep,
+    'eat'   => P_cmd_eat,
+    'roll'  => P_cmd_roll,
+    'grunt' => P_cmd_grunt,
   }
   
   map = table[cmd]
