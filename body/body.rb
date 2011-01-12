@@ -50,33 +50,50 @@ class TCPBrainConnection
   end
 end
 
-b = TCPBrainConnection.new
+class Body
+  def initialize(conn_type=TCPBrainConnection)
+    @conn = conn_type.new    
+  end
+  
+  def send_status(status)
+    @conn.send_status status
+  end
+  
+  def process_next_cmd
+    cmd = @conn.recv_cmd.unpack('ccv')
 
-loop do
-  cmd = b.recv_cmd.unpack('ccv')
-
-  if cmd[0] == PMF_cmd
-    case b.eval_cmd(cmd[1])
-    when :close 
-      exit
-    when :oink
-      system "open rsc/tstPg.jpg"
-    when :walk
-      direction = 'unkown'
-      if (rand(1) == 0)
-        direction = 'forward'
+    if cmd[0] == PMF_cmd
+      case @conn.eval_cmd(cmd[1])
+      when :close 
+        exit
+      when :oink
+        system "open rsc/tstPg.jpg"
+      when :walk
+        direction = 'unkown'
+        if (rand(1) == 0)
+          direction = 'forward'
+        else
+          direction = 'backward'
+        end
+        puts "walking for #{rand(50)} steps #{direction}"
+      when :grunt
+        puts "grunt"
+      when :roll
+        puts "rolling to the sound of music!!! lalalalala! oink."
+        system "open rsc/tstOnk.mp3"
       else
-        direction = 'backward'
+        puts "CONFUSED!!!"
       end
-      puts "walking for #{rand(50)} steps #{direction}"
-    when :grunt
-      puts "grunt"
-    when :roll
-      puts "rolling to the sound of music!!! lalalalala! oink."
-      system "open rsc/tstOnk.mp3"
-    else
-      puts "CONFUSED!!!"
     end
+    
+  end
+end
+
+def test_pig
+  b = Body.new
+
+  loop do
+    b.process_next_cmd
   end
 end
 
