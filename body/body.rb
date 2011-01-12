@@ -73,7 +73,7 @@ loop do
       puts "grunt"
     when :roll
       puts "rolling to the sound of music!!! lalalalala! oink."
-      system "open rsc/tstSnd.mp3"
+      system "open rsc/tstOnk.mp3"
     else
       puts "CONFUSED!!!"
     end
