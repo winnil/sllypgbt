@@ -35,7 +35,7 @@ def convert_cmd(cmd)
   if (map)
     return map
   else 
-    raise 'go away, i hate you' 
+    raise 'go away, i hate you. or try harder' 
   end
 end
 

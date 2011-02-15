@@ -6,7 +6,7 @@ require 'shared/pgbt'
 class TCPBrainConnection
   include Socket::Constants
   
-  def initialize
+  def wait_for_brain
     @socket = Socket.new(AF_INET, SOCK_STREAM, 0)
     @socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, true)
     sockaddr = Socket.pack_sockaddr_in(PigPort, $localhost)
@@ -44,26 +44,27 @@ class TCPBrainConnection
     map = table[cmd_code]
     if (map)
       return map
-    else 
-      raise 'go away, i hate you' 
+    else
+      puts 'go away, i hate you. or try again, bad.' 
     end
   end
 end
 
-class Body
-  def initialize(conn_type=TCPBrainConnection)
-    @conn = conn_type.new    
-  end
+class Body < TCPBrainConnection
   
-  def send_status(status)
-    @conn.send_status status
+  attr_reader :x_dir
+  attr_reader :y_dir
+  
+  def initialize
+    @x_dir = 1
+    @y_dir = 0
   end
   
   def process_next_cmd
-    cmd = @conn.recv_cmd.unpack('ccv')
+    cmd = recv_cmd.unpack('ccv')
 
     if cmd[0] == PMF_cmd
-      case @conn.eval_cmd(cmd[1])
+      case eval_cmd(cmd[1])
       when :close 
         exit
       when :oink

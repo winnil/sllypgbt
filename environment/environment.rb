@@ -3,22 +3,30 @@ class Environment
     # TODO: make more shapes
     @width  = w
     @height = h
-    @pig = Body.new
-    @pig_loc = { :x => w/2, :y => h/2 }
+    @body = nil
+    @body_loc = { :x => w/2, :y => h/2 }
   end
   
-  def next_step
-    @pig_loc[:x] += 1
+  def put_body(b)
+    @body = b
+  end
+  
+  def next_step    
+    @body_loc[:x] += @body.x_dir
+    @body_loc[:y] += @body.y_dir
     
     # TODO: has pig eaten??
     
-    @pig.send_status "Pig hit wall! Am at (#{pig_loc[:x]}, #{pig_loc[:y]})"
-    @pig.process_next_cmd
+    @body.send_status "Pig hit wall! Am at (#{@body_loc[:x]}, #{@body_loc[:y]})"
+    @body.process_next_cmd
   end
-end
 
-def simulate 
-  loop do
-    next_step
+  def simulate 
+    @body.wait_for_brain
+    
+    loop do
+      next_step
+    end
   end
+
 end
